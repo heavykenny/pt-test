@@ -9,6 +9,6 @@ class Hobby extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'content', 'user_id',
+        'title','content', 'user_id',
     ];
 }

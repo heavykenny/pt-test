@@ -16,6 +16,7 @@ class CreateHobbiesTable extends Migration
         Schema::create('hobbies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->string('title');
             $table->string('content');
             $table->timestamps();
             $table->softDeletes();

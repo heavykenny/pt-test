@@ -17,44 +17,46 @@ class HobbyController extends Controller
         $hobbies = Hobby::where('user_id', $request->user_id)->get();
         return response([
             'status' => true,
-            'hobby'=> $hobbies
+            'hobby' => $hobbies
         ], config('constants.status.HTTP_OK'));
     }
 
-    public function addHobby(Request $request){
+    public function addHobby(Request $request)
+    {
         $user = User::find($request->user_id);
-        $data['content'] = $request->hobby;
-        $data['title'] = $request->hobby;
+        $data['content'] = $request->hobby_content;
+        $data['title'] = $request->hobby_title;
         $data['user_id'] = $user->id;
         $hobby = Hobby::create($data);
 
-        if($hobby){
+        if ($hobby) {
             $details['name'] = $user->email;
             $details['hobby_title'] = $request->hobby;
             $details['hobby_action'] = "Created";
             Mail::to($user)->send(new HobbyMailNotification($details));
             return response([
                 'status' => true,
-                'message'=> 'Successfully Created',
+                'message' => 'Successfully Created',
                 'hobbies' => $hobby
             ], config('constants.status.HTTP_OK'));
-        }else{
+        } else {
             return response([
                 'status' => false,
-                'message'=> 'Error While Creating',
+                'message' => 'Error While Creating',
             ], config('constants.status.HTTP_OK'));
         }
     }
 
-    public function editHobby(Request $request){
+    public function editHobby(Request $request)
+    {
         $user = User::find($request->user_id);
 
         $data['content'] = $request->hobby_content;
-        $data['content'] = $request->hobby_title;
+        $data['title'] = $request->hobby_title;
 
-        $updateHobby = Hobby::where('id',$request->hobby_id)->update([$data]);
+        $updateHobby = Hobby::where('id', $request->hobby_id)->update([$data]);
 
-        if($updateHobby){
+        if ($updateHobby) {
             $details['name'] = $user->email;
             $details['hobby_title'] = $request->hobby_title;
             $details['hobby_action'] = "Updated";
@@ -62,35 +64,36 @@ class HobbyController extends Controller
 
             return response([
                 'status' => true,
-                'message'=> 'Successfully Updated',
+                'message' => 'Successfully Updated',
                 'hobbies' => $updateHobby
             ], config('constants.status.HTTP_OK'));
-        }else{
+        } else {
             return response([
                 'status' => false,
-                'message'=> 'Error While Updating',
+                'message' => 'Error While Updating',
             ], config('constants.status.HTTP_OK'));
         }
     }
 
-    public function deleteHobby(Request $request){
+    public function deleteHobby(Request $request)
+    {
         $user = User::find($request->user_id);
 
         $hobby_id = $request->hobby_id;
         $deleteHobby = Hobby::delete($hobby_id);
-        if($deleteHobby){
+        if ($deleteHobby) {
             $details['name'] = $user->email;
             $details['hobby_title'] = $deleteHobby->hobby_title;
             $details['hobby_action'] = "Deleted";
             Mail::to($user)->send(new HobbyMailNotification($details));
             return response([
                 'status' => true,
-                'message'=> 'Successfully Deleted',
+                'message' => 'Successfully Deleted',
             ], config('constants.status.HTTP_OK'));
-        }else{
+        } else {
             return response([
                 'status' => false,
-                'message'=> 'Error While Deleting',
+                'message' => 'Error While Deleting',
             ], config('constants.status.HTTP_OK'));
         }
     }
