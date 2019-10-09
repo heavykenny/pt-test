@@ -16,3 +16,12 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('user-register', 'API\UserController@userRegistration');
+Route::post('user-login', 'API\UserController@userLogin');
+
+Route::group(['prefix' => 'user', 'middleware' => ['jwt.verify']], function () {
+    Route::get('get-user-hobby', 'API\HobbyController@getAllUserHobby');
+    Route::post('user-add-hobby', 'API\HobbyController@addHobby');
+    Route::post('user-edit-hobby', 'API\HobbyController@editHobby');
+    Route::delete('user-delete-hobby', 'API\HobbyController@deleteHobby');
+});

@@ -1,9 +1,7 @@
 @component('mail::message')
-Hello {{$data['name']}}} !
+Hello {{$data['name']}} !
 
-Your Hobby with title {{$data['hobby_title']}} have been successfully {{$data['hobby_action']}}
+Your Hobby Titled : {{$data['hobby_title']}}, have been successfully {{$data['hobby_action']}}
 
-@endcomponent
-
-Thanks,<br>
+Thanks<br>
 @endcomponent

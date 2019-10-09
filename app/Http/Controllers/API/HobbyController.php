@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Hobby;
+use App\Http\Controllers\Controller;
 use App\Mail\HobbyMailNotification;
-use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\User;
 
 class HobbyController extends Controller
 {
-    const HTTP_OK = 200;
 
     public function getAllUserHobby(Request $request)
     {
@@ -30,8 +30,8 @@ class HobbyController extends Controller
         $hobby = Hobby::create($data);
 
         if ($hobby) {
-            $details['name'] = $user->email;
-            $details['hobby_title'] = $request->hobby;
+            $details['name'] = $user->name;
+            $details['hobby_title'] = $hobby->title;
             $details['hobby_action'] = "Created";
             Mail::to($user)->send(new HobbyMailNotification($details));
             return response([
@@ -49,16 +49,16 @@ class HobbyController extends Controller
 
     public function editHobby(Request $request)
     {
-        $user = User::find($request->user_id);
+        $hobby = Hobby::find($request->hobby_id);
+        $user = User::find($hobby->user_id);
 
         $data['content'] = $request->hobby_content;
         $data['title'] = $request->hobby_title;
 
-        $updateHobby = Hobby::where('id', $request->hobby_id)->update([$data]);
-
+        $updateHobby = Hobby::where('id', $hobby->id)->update($data);
         if ($updateHobby) {
-            $details['name'] = $user->email;
-            $details['hobby_title'] = $request->hobby_title;
+            $details['name'] = $user->name;
+            $details['hobby_title'] = $hobby->title;
             $details['hobby_action'] = "Updated";
             Mail::to($user)->send(new HobbyMailNotification($details));
 
@@ -77,13 +77,13 @@ class HobbyController extends Controller
 
     public function deleteHobby(Request $request)
     {
-        $user = User::find($request->user_id);
+        $hobby = Hobby::find($request->hobby_id);
+        $user = User::find($hobby->user_id);
 
-        $hobby_id = $request->hobby_id;
-        $deleteHobby = Hobby::delete($hobby_id);
+        $deleteHobby = Hobby::where('id',$hobby->id)->delete();
         if ($deleteHobby) {
-            $details['name'] = $user->email;
-            $details['hobby_title'] = $deleteHobby->hobby_title;
+            $details['name'] = $user->name;
+            $details['hobby_title'] = $hobby->title;
             $details['hobby_action'] = "Deleted";
             Mail::to($user)->send(new HobbyMailNotification($details));
             return response([

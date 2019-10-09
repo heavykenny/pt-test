@@ -23,7 +23,7 @@ class HobbyMailNotification extends Mailable
      */
     public function __construct($data)
     {
-        $this->$data = $data;
+        $this->data = $data;
     }
 
     /**
@@ -33,6 +33,6 @@ class HobbyMailNotification extends Mailable
      */
     public function build()
     {
-        return $this->from(env('FROM_EMAIL'))->subject('Hobby Notification')->markdown('emails.hobbyemail');
+        return $this->from(env('MAIL_FROM_ADDRESS'))->subject('Hobby Notification')->markdown('emails.hobbyemail');
     }
 }
