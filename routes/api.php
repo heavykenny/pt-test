@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('user-register', 'API\UserController@userRegistration');
 Route::post('user-login', 'API\UserController@userLogin');
+Route::get('get-user-details', 'API\UserController@getAuthenticatedUser');
 
 Route::group(['prefix' => 'user', 'middleware' => ['jwt.verify']], function () {
     Route::get('get-user-hobby', 'API\HobbyController@getAllUserHobby');
