@@ -25,5 +25,5 @@ Route::group(['prefix' => 'user', 'middleware' => ['jwt.verify']], function () {
     Route::get('get-hobby-details', 'API\HobbyController@getHobbyDetails');
     Route::post('user-add-hobby', 'API\HobbyController@addHobby');
     Route::post('user-edit-hobby', 'API\HobbyController@editHobby');
-    Route::post('user-delete-hobby', 'API\HobbyController@deleteHobby');
+    Route::delete('user-delete-hobby', 'API\HobbyController@deleteHobby');
 });
