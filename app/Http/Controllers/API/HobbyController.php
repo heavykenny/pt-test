@@ -8,6 +8,7 @@ use App\Mail\HobbyMailNotification;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Twilio\Rest\Client;
 
 class HobbyController extends Controller
 {
@@ -43,6 +44,9 @@ class HobbyController extends Controller
             $details['hobby_title'] = $hobby->title;
             $details['hobby_action'] = "Created";
             Mail::to($user)->send(new HobbyMailNotification($details));
+            $number = $user->phone;
+            $message = "Hobby Created Successfully";
+            $this->sendSMS($message,$number);
             return response([
                 'status' => true,
                 'message' => 'Successfully Created',
@@ -70,7 +74,9 @@ class HobbyController extends Controller
             $details['hobby_title'] = $hobby->title;
             $details['hobby_action'] = "Updated";
             Mail::to($user)->send(new HobbyMailNotification($details));
-
+            $number = $user->phone;
+            $message = "Hobby Updated Successfully";
+            $this->sendSMS($message,$number);
             return response([
                 'status' => true,
                 'message' => 'Successfully Updated',
@@ -95,6 +101,9 @@ class HobbyController extends Controller
             $details['hobby_title'] = $hobby->title;
             $details['hobby_action'] = "Deleted";
             Mail::to($user)->send(new HobbyMailNotification($details));
+            $number = $user->phone;
+            $message = "Hobby Deleted Successfully";
+            $this->sendSMS($message,$number);
             return response([
                 'status' => true,
                 'message' => 'Successfully Deleted',
@@ -104,6 +113,25 @@ class HobbyController extends Controller
                 'status' => false,
                 'message' => 'Error While Deleting',
             ], config('constants.status.HTTP_OK'));
+        }
+    }
+
+    private function sendSMS($message, $number)
+    {
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $client = new Client($sid, $token);
+        $sendsms = $client->messages->create(
+            $number,
+            [
+                'from' => env('TWILIO_FROM'),
+                'body' => $message,
+            ]
+        );
+        if($sendsms){
+            return true;
+        }else{
+            return false;
         }
     }
 }

@@ -1,0 +1,3 @@
+Laravel Backend to create hobby.
+
+This sends Email and SMS notification on Create, Update and Delete action.
